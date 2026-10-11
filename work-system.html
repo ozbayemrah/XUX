@@ -8,9 +8,8 @@
 <meta property="og:title" content="XUX Work System — Partner briefing">
 <meta property="og:description" content="What we focus on, the launch timeline, and how we work with partners.">
 
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+<!-- same mono/display pairing as the design/ portfolio, self-hosted -->
+<link rel="stylesheet" href="assets/fonts/fonts.css">
 <script>
   try { if (localStorage.getItem("theme") !== "dark") document.documentElement.setAttribute("data-theme", "light"); } catch (e) {}
 </script>
@@ -242,7 +241,8 @@
     max-width: 18ch;
   }
   .slide h2 em { font-style: normal; color: var(--hazard); }
-  .slide__lead { color: var(--muted); font-size: clamp(13px, 1.25vw, 17px); max-width: 64ch; }
+  .slide__lead { color: var(--muted); font-size: clamp(15px, 1.6vw, 24px); line-height: 1.4; max-width: 40ch; }
+  .slide .label { font-size: 12px; }
 
   /* -- entrance: content of the active slide rises in -- */
   .slide .anim { opacity: 0; transform: translateY(14px); transition: opacity 0.5s ease, transform 0.5s ease; }
@@ -261,12 +261,17 @@
   }
   .slide__text { display: flex; flex-direction: column; gap: clamp(14px, 2.4vh, 26px); }
 
+  /* 3D panel colours: read by assets/viz.js for the wireframe and
+     point cloud, so each theme gets its own tuned render */
   .viz {
+    --viz-line: #b9bdc2;
+    --viz-point: #8a8f93;
+    --viz-point-opacity: 0.45;
     position: relative;
     height: clamp(200px, 34vh, 400px);
     border: 1px dashed var(--line-strong);
     background:
-      radial-gradient(closest-side, var(--hazard-dim), transparent 70%),
+      radial-gradient(closest-side, rgba(255, 255, 255, 0.06), transparent 70%),
       var(--bg);
     overflow: hidden;
   }
@@ -296,6 +301,18 @@
   .viz.is-ready .viz__status { display: none; }
   .viz.is-error .viz__status { color: var(--hazard); }
   .viz.is-error .viz__status::after { content: " // offline"; }
+  /* light theme: paper-white screen, graphite wireframe, softer glow
+     and scanlines (models are grey in both themes; red stays on labels) */
+  :root[data-theme="light"] .viz {
+    --viz-line: #4a4d52;
+    --viz-point: #8a8f93;
+    --viz-point-opacity: 0.4;
+    border: 1px solid var(--line-strong);
+    background:
+      radial-gradient(closest-side, rgba(0, 0, 0, 0.04), transparent 70%),
+      #f8f7f3;
+  }
+  :root[data-theme="light"] .viz::after { opacity: 0.35; }
 
   /* shared panel */
   .panel {
@@ -307,12 +324,12 @@
   .panel h3 {
     font-family: var(--display);
     font-weight: 700;
-    font-size: clamp(17px, 1.6vw, 24px);
-    line-height: 1.1;
+    font-size: clamp(20px, 2vw, 32px);
+    line-height: 1.05;
     text-transform: uppercase;
     margin: 8px 0 8px;
   }
-  .panel p { color: var(--muted); font-size: clamp(12px, 1vw, 14px); }
+  .panel p { color: var(--muted); font-size: clamp(14px, 1.25vw, 19px); line-height: 1.4; }
   .panel--hl { border: 1px solid var(--hazard); background: var(--stripe), var(--bg); }
 
   /* ---------- slide: focus ---------- */
@@ -325,29 +342,37 @@
     line-height: 1;
     color: var(--hazard);
   }
-  .focus ul { list-style: none; margin-top: 10px; border-top: 1px solid var(--line); }
-  .focus li {
+
+  .thesis {
+    position: relative;
     display: flex;
-    gap: 8px;
-    padding: 7px 0;
-    border-bottom: 1px solid var(--line);
-    font-size: 11px;
-    letter-spacing: 0.04em;
-    text-transform: uppercase;
+    align-items: stretch;
+    border: 1px solid var(--hazard);
+    background: var(--bg);
   }
-  .focus li::before { content: "▸"; color: var(--hazard); }
-  .strip {
+  .thesis__tag {
     display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-  }
-  .strip span {
-    padding: 6px 10px;
-    background-image: var(--stripe);
+    align-items: center;
+    padding: 0 clamp(12px, 1.4vw, 20px);
+    background: var(--hazard);
+    color: #141414;
     font-size: 11px;
-    letter-spacing: 0.1em;
+    font-weight: 700;
+    letter-spacing: 0.14em;
     text-transform: uppercase;
-    color: var(--fg);
+    white-space: nowrap;
+  }
+  .thesis__body {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding: clamp(10px, 1.6vh, 16px) clamp(14px, 1.6vw, 22px);
+  }
+  .thesis__body b {
+    font-family: var(--display);
+    font-size: clamp(16px, 1.6vw, 24px);
+    line-height: 1.15;
+    text-transform: uppercase;
   }
 
   /* ---------- slide: timeline ---------- */
@@ -370,19 +395,6 @@
   .tl__step--now .tl__node { background: var(--hazard); border-color: var(--hazard); box-shadow: 0 0 0 4px var(--hazard-dim), 0 0 14px var(--hazard); }
   .tl__step--launch .tl__node { width: 22px; height: 22px; margin-top: -3px; border: 2px solid var(--hazard); }
   .tl__step .panel { flex: 1; }
-  .tl__step ul { list-style: none; margin-top: 8px; }
-  .tl__step li { font-size: clamp(11px, 0.9vw, 13px); color: var(--muted); padding: 3px 0 3px 14px; position: relative; }
-  .tl__step li::before { content: "—"; position: absolute; left: 0; color: var(--hazard); }
-  .rule {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 10px 18px;
-    padding: 14px 18px;
-    border: 1px solid var(--hazard);
-    background: var(--bg);
-  }
-  .rule b { font-family: var(--display); font-size: clamp(15px, 1.4vw, 20px); text-transform: uppercase; }
 
   /* ---------- slide: engagement path ---------- */
   .path { display: grid; grid-template-columns: 1fr auto 1fr auto 1fr auto 0.9fr; gap: 10px; align-items: stretch; }
@@ -406,8 +418,7 @@
     color: #141414;
   }
   .path__out .label { color: #141414; font-weight: 700; }
-  .path__out b { font-family: var(--display); font-size: clamp(18px, 1.8vw, 28px); line-height: 1.05; text-transform: uppercase; }
-  .path__out p { font-size: 12px; }
+  .path__out b { font-family: var(--display); font-size: clamp(20px, 2.2vw, 34px); line-height: 1.05; text-transform: uppercase; }
 
   /* ---------- slide: partner ---------- */
   .partner { display: grid; grid-template-columns: 1.3fr 1fr auto; gap: 12px; align-items: stretch; }
@@ -417,13 +428,13 @@
     gap: 8px;
     padding: 8px 0;
     border-bottom: 1px solid var(--line);
-    font-size: clamp(11px, 0.95vw, 13px);
+    font-size: clamp(14px, 1.2vw, 18px);
   }
   .partner li::before { content: "▸"; color: var(--hazard); }
   .contact-list { display: flex; flex-direction: column; gap: 10px; margin-top: 8px; }
   .contact-list a { display: block; padding: 10px 12px; border: 1px dashed var(--line-strong); transition: border-color .15s ease; }
   .contact-list a:hover { border-color: var(--hazard); border-style: solid; }
-  .contact-list .v { display: block; font-family: var(--display); font-weight: 700; font-size: clamp(13px, 1.1vw, 16px); word-break: break-word; }
+  .contact-list .v { display: block; font-family: var(--display); font-weight: 700; font-size: clamp(15px, 1.4vw, 21px); word-break: break-word; }
   .qrcard {
     position: relative;
     display: flex;
@@ -476,6 +487,28 @@
   .ctrl__dot:hover { color: var(--hazard); }
   .ctrl__hint { white-space: nowrap; }
 
+  /* ---------- short landscape screens (iPad landscape, laptops):
+     tighten vertical rhythm so every slide fits without scrolling ---------- */
+  @media (max-height: 1050px) and (min-width: 761px) {
+    .slide { padding-top: 14px; padding-bottom: 16px; }
+    .slide__bar { min-height: 36px; }
+    .deck__nav { top: 14px; }
+    .slide__inner { gap: clamp(12px, 2.2vh, 22px); padding-top: 12px; }
+    .slide h2 { font-size: clamp(30px, min(4.6vw, 7.4vh), 72px); }
+    .slide__lead { font-size: clamp(14px, 1.4vw, 19px); }
+    .slide__text { gap: 10px; }
+    .viz { height: clamp(150px, 27vh, 260px); }
+    .panel { padding: 12px 14px; }
+    .panel h3 { font-size: clamp(17px, 1.8vw, 24px); margin: 4px 0 4px; }
+    .panel p { font-size: clamp(13px, 1.15vw, 16px); }
+    .focus__num, .path__step { font-size: clamp(26px, 3vw, 40px); }
+    .thesis__body { padding: 8px 14px; }
+    .thesis__body b { font-size: clamp(14px, 1.4vw, 19px); }
+    .qrcard { width: clamp(170px, 16vw, 220px); padding: 10px; }
+    .contact-list a { padding: 8px 10px; }
+    .partner li { padding: 6px 0; }
+  }
+
   /* ---------- responsive ---------- */
   @media (max-width: 1100px) {
     .path { grid-template-columns: 1fr 1fr; }
@@ -489,6 +522,8 @@
     .slide__inner { justify-content: flex-start; }
     .focus, .tl, .path, .partner { grid-template-columns: 1fr; }
     .slide__hero { grid-template-columns: 1fr; }
+    .thesis { flex-direction: column; }
+    .thesis__tag { padding: 6px 12px; }
     .viz { height: 240px; }
     .tl::before { left: 7px; right: auto; top: 0; bottom: 0; width: 2px; height: auto; background: var(--hazard); }
     .tl__step { padding-left: 28px; }
@@ -496,6 +531,13 @@
     .tl__step--launch .tl__node { left: -3px; }
     .partner .qrcard { flex-direction: column; }
     .ctrl__dot span { display: none; }
+  }
+  /* iPad landscape: keep the partner slide on one row (QR as its own
+     column) instead of stacking, so it fits the screen height */
+  @media (max-height: 1050px) and (min-width: 761px) and (max-width: 1100px) {
+    .partner { grid-template-columns: 1.2fr 1fr auto; }
+    .partner .qrcard { grid-column: auto; flex-direction: column; align-items: stretch; width: clamp(160px, 18vw, 200px); }
+    .partner .qrcard__qr { width: 100%; }
   }
 </style>
 </head>
@@ -549,7 +591,7 @@
         <div class="slide__hero anim">
           <div class="slide__text">
             <h2>Usable <em>where humans barely can.</em></h2>
-            <p class="slide__lead">XUX makes complex products understandable, usable and safe for the people who operate them, in space and other extreme environments. Three focus areas:</p>
+            <p class="slide__lead">Making complex products usable and safe for the people who operate them.</p>
           </div>
           <figure class="viz" data-model="assets/models/iss.glb" data-start="0.6" data-tilt="0.35">
             <i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>
@@ -564,26 +606,27 @@
             <i class="corner tl"></i><i class="corner br"></i>
             <span class="focus__num">01</span>
             <h3>HMI design</h3>
-            <p>The screens, controls and tools operators actually touch.</p>
-            <ul><li>Operator &amp; ground-control UI</li><li>Mission tools</li><li>Handheld hardware</li></ul>
+            <p>Screens, controls and tools operators touch.</p>
           </div>
           <div class="panel">
             <i class="corner tl"></i><i class="corner br"></i>
             <span class="focus__num">02</span>
             <h3>Human–machine interaction</h3>
-            <p>How people and machines share decisions when workload spikes.</p>
-            <ul><li>Alarm &amp; layout logic</li><li>Navigation under stress</li><li>Control review</li></ul>
+            <p>Shared decisions when workload spikes.</p>
           </div>
           <div class="panel panel--hl">
             <i class="corner tl"></i><i class="corner br"></i>
             <span class="focus__num">03</span>
             <h3>Extreme-environment usability</h3>
-            <p>Testing what still works when the body is pushed to its limit.</p>
-            <ul><li>Gloved input</li><li>Vibration &amp; CO2 load</li><li>Time pressure</li></ul>
+            <p>Gloves, vibration, CO2, time pressure.</p>
           </div>
         </div>
-        <div class="strip anim">
-          <span>Built on NASA-STD-3001</span><span>ECSS-E-ST-10-11C</span><span>Numbers, not adjectives</span>
+        <div class="thesis anim">
+          <span class="thesis__tag">Research foundation</span>
+          <div class="thesis__body">
+            <b>Scientific research towards a proposed usability standard for space &amp; aerospace environments.</b>
+            <span class="label">Master's thesis · FH JOANNEUM · 2026 · building on NASA-STD-3001 &amp; ECSS</span>
+          </div>
         </div>
       </div>
     </section>
@@ -595,7 +638,7 @@
         <div class="slide__hero anim">
           <div class="slide__text">
             <h2>Contracts first. <em>Clients from day one.</em></h2>
-            <p class="slide__lead">Experience and design contracts are secured before the company is founded, so work with partners starts on launch day, not months after.</p>
+            <p class="slide__lead"><b class="hz">Goal:</b> first design contracts agreed before the company is founded, so client work starts on launch day.</p>
           </div>
           <figure class="viz" data-model="assets/models/tdrs.glb" data-start="0.9" data-tilt="0.3" data-zoom="1.45">
             <i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>
@@ -611,15 +654,15 @@
             <span class="label label--hz">Now · 2026</span>
             <div class="panel">
               <h3>Research</h3>
-              <ul><li>Master's thesis, FH JOANNEUM</li><li>Methods for gloved &amp; high-stress use</li><li>Talks with space teams</li></ul>
+              <p>Master's thesis at FH JOANNEUM.</p>
             </div>
           </div>
           <div class="tl__step tl__step--next">
             <span class="tl__node"></span>
             <span class="label label--hz">2026 – 2027</span>
             <div class="panel panel--hl">
-              <h3>Pre-launch contracts</h3>
-              <ul><li>Secure first experience &amp; design contracts</li><li>Agree partner scopes &amp; start dates</li><li>ESA BIC Austria &amp; national funding</li></ul>
+              <h3>Pre-launch</h3>
+              <p>First contracts &amp; funding applications.</p>
             </div>
           </div>
           <div class="tl__step tl__step--launch">
@@ -627,7 +670,7 @@
             <span class="label label--fg">Q1 2027 · Launch</span>
             <div class="panel">
               <h3>Day one</h3>
-              <ul><li>Incorporation in Styria</li><li>Contracted work starts immediately</li><li>Clients &amp; partners onboard</li></ul>
+              <p>Founded in Styria, client work starts.</p>
             </div>
           </div>
           <div class="tl__step">
@@ -635,13 +678,9 @@
             <span class="label">2027 +</span>
             <div class="panel">
               <h3>Scale</h3>
-              <ul><li>Human-factors audits</li><li>Licensed interface frameworks</li><li>Team training</li></ul>
+              <p>Audits, frameworks, training.</p>
             </div>
           </div>
-        </div>
-        <div class="rule anim">
-          <span class="label label--hz">Principle</span>
-          <b>No empty launch: the first clients are signed before the company exists.</b>
         </div>
       </div>
     </section>
@@ -653,7 +692,7 @@
         <div class="slide__hero anim">
           <div class="slide__text">
             <h2>From first impression <em>to product experience.</em></h2>
-            <p class="slide__lead">Every partnership starts at the surface and works inward, so each step builds trust and evidence for the next.</p>
+            <p class="slide__lead">Start at the surface, then work inward.</p>
           </div>
           <figure class="viz" data-model="assets/models/eva-suit.glb" data-start="0.4" data-tilt="0.08">
             <i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>
@@ -666,32 +705,28 @@
         <div class="path anim">
           <div class="panel">
             <span class="path__step">01</span>
-            <span class="label label--hz">Start · Brand</span>
-            <h3>Branding &amp; communication</h3>
-            <p>Brand review and the usability of web and brand materials: website, pitch decks, mission visuals. Fast, visible results.</p>
-            <span class="label path__level">Level 01 · Signal</span>
+            <h3>Brand</h3>
+            <p>Brand, web &amp; material usability review.</p>
+            <span class="label path__level">Signal</span>
           </div>
           <div class="path__arrow" aria-hidden="true">▸</div>
           <div class="panel">
             <span class="path__step">02</span>
-            <span class="label label--hz">Then · Product</span>
-            <h3>Product usability barriers</h3>
-            <p>Move into the product itself: operator screens, tools and hardware. Find where users struggle, hesitate or make errors.</p>
-            <span class="label path__level">Level 02 · Interface / Experience</span>
+            <h3>Product</h3>
+            <p>Find the usability barriers in the product.</p>
+            <span class="label path__level">Interface / Experience</span>
           </div>
           <div class="path__arrow" aria-hidden="true">▸</div>
           <div class="panel panel--hl">
             <span class="path__step">03</span>
-            <span class="label label--hz">Deep · Research</span>
             <h3>Research &amp; solve</h3>
-            <p>Observe the real task, measure under stress, specify design rules with numbers, redesign and validate with users.</p>
-            <span class="label path__level">Level 03 · Assurance</span>
+            <p>Test under real conditions, then fix.</p>
+            <span class="label path__level">Assurance</span>
           </div>
           <div class="path__arrow" aria-hidden="true">▸</div>
           <div class="path__out">
             <span class="label">Outcome</span>
             <b>A high-level product experience.</b>
-            <p>Products operators understand, trust and use correctly, even at the edge.</p>
           </div>
         </div>
       </div>
@@ -717,9 +752,8 @@
           <div class="panel">
             <span class="label label--hz">Who we're looking for</span>
             <ul>
-              <li>Teams with an operator screen, ground tool or hardware that has to work in hard conditions</li>
-              <li>Products whose brand and web presence don't yet match their engineering</li>
-              <li>Partners open to research and testing with real operators</li>
+              <li>Operator screens, ground tools or hardware</li>
+              <li>Teams ready to test with real operators</li>
             </ul>
           </div>
           <div class="panel">
@@ -738,7 +772,6 @@
             </div>
           </div>
         </div>
-        <p class="label anim">"XUX" is a temporary working name. The brand is under construction.</p>
       </div>
     </section>
 
@@ -755,11 +788,11 @@
   <span class="label ctrl__hint">← → keys · F fullscreen</span>
 </nav>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js"></script>
+<script src="assets/vendor/qrcode.min.js"></script>
 <script src="assets/vcard.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/DRACOLoader.js"></script>
+<script src="assets/vendor/three.min.js"></script>
+<script src="assets/vendor/GLTFLoader.js"></script>
+<script src="assets/vendor/DRACOLoader.js"></script>
 <script>
   /* theme toggle — same storage key as index.html and the portfolio */
   (function () {

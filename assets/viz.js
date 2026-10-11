@@ -1,14 +1,13 @@
 /* HUD-style 3D viewers for work-system.html.
    Every <figure class="viz" data-model="…glb"> gets a slowly rotating
-   wireframe + point-cloud render of a NASA 3D Resources model
+   grey wireframe + point-cloud render of a NASA 3D Resources model
    (public domain — credited in each viewer's label, no NASA logos).
    Needs three r128 + GLTFLoader + DRACOLoader loaded first. Only the
    viewer on the active slide renders (the deck fires "deck:change"). */
 (function () {
   if (!window.THREE || !THREE.GLTFLoader) return;
 
-  var DRACO_PATH = "https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/libs/draco/gltf/";
-  var HAZARD = 0xff3b30;
+  var DRACO_PATH = "assets/vendor/draco/";   // self-hosted decoder, works offline
   var reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
   var draco = new THREE.DRACOLoader();
@@ -20,9 +19,22 @@
   var active = Math.max(0, slides.findIndex(function (s) { return s.classList.contains("is-active"); }));
   var transitionUntil = 0;
 
-  function fgColor() {
-    var v = getComputedStyle(document.documentElement).getPropertyValue("--fg").trim();
-    return new THREE.Color(v || "#ededed");
+  // colours come from each viewer's CSS (--viz-line / --viz-point /
+  // --viz-point-opacity), so the light and dark themes are tuned in CSS
+  function palette(el) {
+    var cs = getComputedStyle(el);
+    function v(name, fallback) { return cs.getPropertyValue(name).trim() || fallback; }
+    return {
+      line: new THREE.Color(v("--viz-line", "#b9bdc2")),
+      point: new THREE.Color(v("--viz-point", "#8a8f93")),
+      pointOpacity: parseFloat(v("--viz-point-opacity", "0.5"))
+    };
+  }
+  function applyPalette(it) {
+    var p = palette(it.el);
+    it.lineMats.forEach(function (m) { m.color.copy(p.line); });
+    it.pointMats.forEach(function (m) { m.color.copy(p.point); m.opacity = p.pointOpacity; });
+    it.dirty = true;
   }
 
   var items = Array.prototype.slice.call(document.querySelectorAll(".viz[data-model]")).map(function (el) {
@@ -48,6 +60,7 @@
       speed: parseFloat(el.dataset.speed || "0.22"),   // rad/s
       tilt: parseFloat(el.dataset.tilt || "0.22"),
       pointMats: [],
+      lineMats: [],
       ready: false,
       dragging: false,
       lastX: 0,
@@ -109,7 +122,6 @@
     // data-zoom > 1 for models whose thin parts (antennas, masts) inflate the box
     var s = 2 * parseFloat(it.el.dataset.zoom || "1") / Math.max(dims.x, dims.y, dims.z);
 
-    var fg = fgColor();
     root.traverse(function (o) {
       if (!o.isMesh || !o.geometry || !o.geometry.attributes.position) return;
       var g = o.geometry.clone();
@@ -127,28 +139,22 @@
       }));
       it.pivot.add(occluder);
 
-      var edges = new THREE.LineSegments(
-        new THREE.EdgesGeometry(g, 28),
-        new THREE.LineBasicMaterial({ color: HAZARD, transparent: true, opacity: 0.9 })
-      );
-      it.pivot.add(edges);
+      var lm = new THREE.LineBasicMaterial({ transparent: true, opacity: 0.9 });
+      it.lineMats.push(lm);
+      it.pivot.add(new THREE.LineSegments(new THREE.EdgesGeometry(g, 28), lm));
 
-      var pm = new THREE.PointsMaterial({ color: fg, size: 0.011, transparent: true, opacity: 0.5, depthWrite: false });
+      var pm = new THREE.PointsMaterial({ size: 0.011, transparent: true, depthWrite: false });
       it.pointMats.push(pm);
       it.pivot.add(new THREE.Points(g, pm));
     });
 
+    applyPalette(it);
     it.ready = true;
-    it.dirty = true;
   }
 
   // follow the light/dark toggle
   new MutationObserver(function () {
-    var fg = fgColor();
-    items.forEach(function (it) {
-      it.pointMats.forEach(function (m) { m.color.copy(fg); });
-      it.dirty = true;
-    });
+    items.forEach(applyPalette);
   }).observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
 
   document.addEventListener("deck:change", function (e) {

@@ -20,3 +20,6 @@ The QR code and "Save contact (.vcf)" on both pages come from `assets/vcard.js`.
 
 ## Brand status
 "XUX" is a temporary working name. Both pages say so on purpose; keep the "brand under construction" notes until the final name is chosen.
+
+## Works offline
+Nothing loads from outside the repo: fonts (`assets/fonts/`, SIL Open Font License), three.js r128 + loaders + Draco decoder and the QR library (`assets/vendor/`), and the 3D models (`assets/models/`, public domain, from NASA 3D Resources; credited in each viewer). Safe to present on bad venue wifi.

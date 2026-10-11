@@ -8,10 +8,8 @@
 <meta property="og:title" content="XUX Studio (working name) — Usable where humans barely can">
 <meta property="og:description" content="Human-factors and interface design for space and extreme environments.">
 
-<!-- same mono/display pairing as the design/ portfolio -->
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+<!-- same mono/display pairing as the design/ portfolio, self-hosted -->
+<link rel="stylesheet" href="assets/fonts/fonts.css">
 <script>
   try { if (localStorage.getItem("theme") !== "dark") document.documentElement.setAttribute("data-theme", "light"); } catch (e) {}
 </script>
@@ -602,16 +600,6 @@
   }
   .wip__flag::before { content: "▲"; font-size: 9px; }
   .wip strong { color: var(--fg); }
-  .wip-note {
-    position: relative;
-    margin-top: 28px;
-    max-width: 640px;
-    padding: 14px 18px;
-    border: 1px dashed var(--hazard);
-    color: var(--muted);
-    font-size: 12px;
-  }
-  .wip-note b { color: var(--hazard); letter-spacing: 0.1em; text-transform: uppercase; }
 
   /* ---------- hero contact card QR (vCard) ---------- */
   .hero__top {
@@ -796,8 +784,6 @@
     <div class="ticker__corner"><span></span><span></span><span></span><span></span><span></span></div>
     <div class="ticker__band">
       <div class="ticker__track">
-        <span>Brand under construction</span><span>/</span>
-        <span>XUX = temporary working name</span><span>/</span>
         <span>XUX Studio status: research phase</span><span>/</span>
         <span>Thesis: FH JOANNEUM 2026</span><span>/</span>
         <span>Company launch: Q1 2027</span><span>/</span>
@@ -814,7 +800,7 @@
    <div class="hero__top">
    <div class="hero__main">
     <div class="hero__eyebrow">
-      <span class="label label--hz">XUX Studio (working name)</span>
+      <span class="label label--hz">XUX Studio</span>
       <span class="label">Styria, Austria</span>
       <span class="label">Est. 2027</span>
       <span class="label label--fg">HMI // Human–machine interaction // Extreme-environment usability</span>
@@ -901,7 +887,7 @@
         <i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>
         <span class="label">Level 03 · From 2027</span>
         <h3>Assurance</h3>
-        <p>Audits against our published, numbered design rules, plus licensed frameworks and component kits for your team.</p>
+        <p>Audits against our numbered design rules (in development), plus licensed frameworks and component kits for your team.</p>
         <ul>
           <li>Human-factors design audits</li>
           <li>Licensed interface frameworks</li>
@@ -926,7 +912,7 @@
     </div>
     <div class="note reveal">
       <i class="corner tl corner--on"></i><i class="corner br corner--on"></i>
-      <b>Built on existing standards.</b> Our work extends NASA-STD-3001 (Vol. 2, Human Factors) and ECSS-E-ST-10-11C (Human Factors Engineering) with measured rules for gloved input and high-stress screens.
+      <b>Built on existing standards.</b> Our research builds on NASA-STD-3001 (Vol. 2, Human Factors) and ECSS-E-ST-10-11C (Human Factors Engineering), aiming to add measured rules for gloved input and high-stress screens.
     </div>
   </section>
 
@@ -1005,9 +991,6 @@
       </a>
     </div>
 
-    <div class="wip-note">
-      <b>Note —</b> "XUX" is a placeholder, not the final company name. The brand is under construction; the name, logo and visual identity will change before launch.
-    </div>
   </section>
 
 </main>
@@ -1022,12 +1005,12 @@
     </nav>
   </div>
   <div class="footer__bottom">
-    <span>© <span id="footer-year">2026</span> XUX Studio (working name) · Graz, Styria, Austria</span>
-    <span>Rev B · 2026 — Brand under construction</span>
+    <span>© <span id="footer-year">2026</span> XUX Studio · Graz, Styria, Austria</span>
+    <span>Rev B · 2026</span>
   </div>
 </footer>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js"></script>
+<script src="assets/vendor/qrcode.min.js"></script>
 <script src="assets/vcard.js"></script>
 <script>
   document.getElementById("footer-year").textContent = new Date().getFullYear();
