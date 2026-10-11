@@ -1,0 +1,761 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>XUX Work System (working name) — Partner briefing</title>
+<meta name="description" content="How XUX Studio (working name) works: what we focus on, the timeline to launch, and how we work with partners — from branding to product experience.">
+<meta property="og:title" content="XUX Work System — Partner briefing">
+<meta property="og:description" content="What we focus on, the launch timeline, and how we work with partners.">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+<script>
+  try { if (localStorage.getItem("theme") !== "dark") document.documentElement.setAttribute("data-theme", "light"); } catch (e) {}
+</script>
+<style>
+  /* =========================================================
+     XUX work-system deck — same tokens and components as
+     index.html (and the design/ portfolio). Keep the :root
+     block in sync with index.html if colours change.
+     ========================================================= */
+  :root {
+    --bg: #141414;
+    --bg-panel: #1a1a1a;
+    --bg-panel-alt: #101010;
+    --fg: #ededed;
+    --muted: #8a8f93;
+    --line: rgba(255, 255, 255, 0.09);
+    --line-strong: rgba(255, 255, 255, 0.18);
+    --accent: #ffffff;
+    --accent-dim: rgba(255, 255, 255, 0.14);
+    --accent-fg: #141414;
+    --hazard: #ff3b30;
+    --hazard-dim: rgba(255, 59, 48, 0.18);
+    --mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+    --display: "Space Grotesk", var(--mono);
+    --gap: clamp(16px, 2.4vw, 32px);
+    --stripe: repeating-linear-gradient(45deg, var(--hazard-dim), var(--hazard-dim) 6px, transparent 6px, transparent 12px);
+    --grid:
+      linear-gradient(var(--line) 1px, transparent 1px) 0 0 / 100% 42px,
+      linear-gradient(90deg, var(--line) 1px, transparent 1px) 0 0 / 42px 100%;
+  }
+  :root[data-theme="light"] {
+    --bg: #f2f1ec;
+    --bg-panel: #e9e7e0;
+    --bg-panel-alt: #dfdcd3;
+    --fg: #16171a;
+    --muted: #6b6f73;
+    --line: rgba(0, 0, 0, 0.09);
+    --line-strong: rgba(0, 0, 0, 0.2);
+    --accent: #16171a;
+    --accent-dim: rgba(0, 0, 0, 0.12);
+    --accent-fg: #f2f1ec;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { height: 100%; }
+  body {
+    display: flex;
+    flex-direction: column;
+    height: 100dvh;
+    overflow: hidden;
+    background: var(--bg);
+    color: var(--fg);
+    font-family: var(--mono);
+    font-size: 14px;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+  ::selection { background: var(--accent); color: var(--accent-fg); }
+  a { color: inherit; text-decoration: none; }
+  img { max-width: 100%; display: block; }
+
+  .label {
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  .label--hz { color: var(--hazard); }
+  .label--fg { color: var(--fg); }
+  .hz { color: var(--hazard); }
+
+  .grain {
+    pointer-events: none;
+    position: fixed;
+    inset: 0;
+    z-index: 999;
+    opacity: 0.05;
+    mix-blend-mode: overlay;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='120' height='120'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+  }
+
+  .corner {
+    position: absolute;
+    z-index: 2;
+    width: 8px;
+    height: 8px;
+    background: var(--hazard);
+  }
+  .corner.tl { top: -1px; left: -1px; }
+  .corner.tr { top: -1px; right: -1px; }
+  .corner.bl { bottom: -1px; left: -1px; }
+  .corner.br { bottom: -1px; right: -1px; }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 9px;
+    height: 32px;
+    padding: 0 16px;
+    border: 1px solid var(--hazard);
+    background: var(--stripe);
+    color: var(--accent);
+    font-family: var(--mono);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    cursor: pointer;
+    transition: background 0.15s ease, color 0.15s ease;
+  }
+  .btn:hover { background: var(--accent); color: var(--accent-fg); }
+  .btn:disabled { opacity: 0.35; cursor: default; }
+  .btn:disabled:hover { background: var(--stripe); color: var(--accent); }
+  .btn--sq { width: 32px; padding: 0; }
+
+  /* ---------- top bar ---------- */
+  .top {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--gap);
+    padding: calc(12px + env(safe-area-inset-top, 0px)) var(--gap) 12px;
+    border-bottom: 1px solid var(--line);
+    background: var(--bg);
+  }
+  .top__left, .top__right { display: flex; align-items: center; gap: 18px; }
+  .logo {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    font-family: var(--display);
+    font-weight: 700;
+    font-size: 22px;
+    line-height: 1;
+  }
+  .logo > span:first-child { color: var(--hazard); }
+  .logo__tag {
+    padding: 3px 6px;
+    border: 1px dashed var(--hazard);
+    font-family: var(--mono);
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--hazard);
+  }
+  .top__title { border-left: 1px solid var(--line-strong); padding-left: 18px; }
+
+  .theme-toggle__icon--moon { display: none; }
+  :root[data-theme="light"] .theme-toggle__icon--sun { display: none; }
+  :root[data-theme="light"] .theme-toggle__icon--moon { display: block; }
+  @media (max-width: 760px) {
+    .top__title, .btn--back span, .logo__tag { display: none; }
+    .top__right { gap: 10px; }
+  }
+
+  /* ---------- deck ---------- */
+  .deck {
+    position: relative;
+    flex: 1;
+    min-height: 0;
+    overflow: hidden;
+    background: var(--grid), var(--bg-panel-alt);
+  }
+  /* arrows + counter, pinned over each slide's top bar (right end);
+     outside the track so they don't slide away with the slide */
+  .deck__nav {
+    position: absolute;
+    z-index: 5;
+    top: clamp(18px, 3.2vh, 40px);
+    right: var(--gap);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    height: 32px;
+  }
+  .deck__count { font-variant-numeric: tabular-nums; min-width: 60px; text-align: center; }
+  .deck__track {
+    display: flex;
+    height: 100%;
+    transition: transform 0.6s cubic-bezier(0.7, 0, 0.2, 1);
+  }
+  @media (prefers-reduced-motion: reduce) { .deck__track { transition: none; } }
+
+  .slide {
+    flex: 0 0 100%;
+    height: 100%;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    padding: clamp(18px, 3.2vh, 40px) var(--gap) clamp(20px, 4vh, 48px);
+  }
+  .slide__bar {
+    display: flex;
+    align-items: center;
+    min-height: 42px;
+    padding-right: 150px;  /* room for .deck__nav */
+    justify-content: space-between;
+    gap: 16px;
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--line-strong);
+  }
+  .slide__bar span:first-child { color: var(--hazard); }
+  .slide__inner {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: clamp(18px, 3.5vh, 40px);
+    width: 100%;
+    max-width: 1500px;
+    margin: 0 auto;
+    padding-top: clamp(16px, 3vh, 36px);
+  }
+  .slide h2 {
+    font-family: var(--display);
+    font-weight: 700;
+    text-transform: uppercase;
+    font-size: clamp(32px, min(5.6vw, 9vh), 96px);
+    line-height: 0.95;
+    letter-spacing: -0.01em;
+    max-width: 18ch;
+  }
+  .slide h2 em { font-style: normal; color: var(--hazard); }
+  .slide__lead { color: var(--muted); font-size: clamp(13px, 1.25vw, 17px); max-width: 64ch; }
+
+  /* -- entrance: content of the active slide rises in -- */
+  .slide .anim { opacity: 0; transform: translateY(14px); transition: opacity 0.5s ease, transform 0.5s ease; }
+  .slide.is-active .anim { opacity: 1; transform: none; }
+  .slide.is-active .anim:nth-child(2) { transition-delay: 0.08s; }
+  .slide.is-active .anim:nth-child(3) { transition-delay: 0.16s; }
+  .slide.is-active .anim:nth-child(4) { transition-delay: 0.24s; }
+  @media (prefers-reduced-motion: reduce) { .slide .anim { opacity: 1; transform: none; transition: none; } }
+
+  /* shared panel */
+  .panel {
+    position: relative;
+    padding: clamp(14px, 2vh, 22px) clamp(14px, 1.4vw, 22px);
+    border: 1px dashed var(--line-strong);
+    background: var(--bg);
+  }
+  .panel h3 {
+    font-family: var(--display);
+    font-weight: 700;
+    font-size: clamp(17px, 1.6vw, 24px);
+    line-height: 1.1;
+    text-transform: uppercase;
+    margin: 8px 0 8px;
+  }
+  .panel p { color: var(--muted); font-size: clamp(12px, 1vw, 14px); }
+  .panel--hl { border: 1px solid var(--hazard); background: var(--stripe), var(--bg); }
+
+  /* ---------- slide: focus ---------- */
+  .focus { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+  .focus .panel { display: flex; flex-direction: column; gap: 4px; padding-top: clamp(18px, 2.6vh, 28px); }
+  .focus__num {
+    font-family: var(--display);
+    font-weight: 700;
+    font-size: clamp(34px, 4vw, 60px);
+    line-height: 1;
+    color: var(--hazard);
+  }
+  .focus ul { list-style: none; margin-top: 10px; border-top: 1px solid var(--line); }
+  .focus li {
+    display: flex;
+    gap: 8px;
+    padding: 7px 0;
+    border-bottom: 1px solid var(--line);
+    font-size: 11px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+  .focus li::before { content: "▸"; color: var(--hazard); }
+  .strip {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  .strip span {
+    padding: 6px 10px;
+    background-image: var(--stripe);
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--fg);
+  }
+
+  /* ---------- slide: timeline ---------- */
+  .tl { position: relative; display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+  .tl::before {
+    content: "";
+    position: absolute;
+    left: 0; right: 0; top: 7px;
+    height: 2px;
+    background: linear-gradient(90deg, var(--hazard) 0 37%, var(--line-strong) 37% 100%);
+  }
+  .tl__step { position: relative; display: flex; flex-direction: column; gap: 10px; }
+  .tl__node {
+    width: 16px;
+    height: 16px;
+    border: 1px solid var(--fg);
+    background: var(--bg-panel-alt);
+  }
+  .tl__step--next .tl__node { border-color: var(--hazard); background: var(--stripe), var(--bg-panel-alt); }
+  .tl__step--now .tl__node { background: var(--hazard); border-color: var(--hazard); box-shadow: 0 0 0 4px var(--hazard-dim), 0 0 14px var(--hazard); }
+  .tl__step--launch .tl__node { width: 22px; height: 22px; margin-top: -3px; border: 2px solid var(--hazard); }
+  .tl__step .panel { flex: 1; }
+  .tl__step ul { list-style: none; margin-top: 8px; }
+  .tl__step li { font-size: clamp(11px, 0.9vw, 13px); color: var(--muted); padding: 3px 0 3px 14px; position: relative; }
+  .tl__step li::before { content: "—"; position: absolute; left: 0; color: var(--hazard); }
+  .rule {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px 18px;
+    padding: 14px 18px;
+    border: 1px solid var(--hazard);
+    background: var(--bg);
+  }
+  .rule b { font-family: var(--display); font-size: clamp(15px, 1.4vw, 20px); text-transform: uppercase; }
+
+  /* ---------- slide: engagement path ---------- */
+  .path { display: grid; grid-template-columns: 1fr auto 1fr auto 1fr auto 0.9fr; gap: 10px; align-items: stretch; }
+  .path__arrow {
+    display: grid;
+    place-items: center;
+    color: var(--hazard);
+    font-size: 18px;
+  }
+  .path .panel { display: flex; flex-direction: column; gap: 4px; }
+  .path__step { font-family: var(--display); font-weight: 700; font-size: clamp(28px, 3vw, 44px); line-height: 1; color: var(--line-strong); }
+  .path .panel:hover .path__step { color: var(--hazard); }
+  .path__level { margin-top: auto; padding-top: 10px; border-top: 1px dashed var(--line-strong); }
+  .path__out {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 8px;
+    padding: clamp(14px, 2vh, 22px);
+    background: var(--hazard);
+    color: #141414;
+  }
+  .path__out .label { color: #141414; font-weight: 700; }
+  .path__out b { font-family: var(--display); font-size: clamp(18px, 1.8vw, 28px); line-height: 1.05; text-transform: uppercase; }
+  .path__out p { font-size: 12px; }
+
+  /* ---------- slide: partner ---------- */
+  .partner { display: grid; grid-template-columns: 1.3fr 1fr auto; gap: 12px; align-items: stretch; }
+  .partner ul { list-style: none; margin-top: 8px; border-top: 1px solid var(--line); }
+  .partner li {
+    display: flex;
+    gap: 8px;
+    padding: 8px 0;
+    border-bottom: 1px solid var(--line);
+    font-size: clamp(11px, 0.95vw, 13px);
+  }
+  .partner li::before { content: "▸"; color: var(--hazard); }
+  .contact-list { display: flex; flex-direction: column; gap: 10px; margin-top: 8px; }
+  .contact-list a { display: block; padding: 10px 12px; border: 1px dashed var(--line-strong); transition: border-color .15s ease; }
+  .contact-list a:hover { border-color: var(--hazard); border-style: solid; }
+  .contact-list .v { display: block; font-family: var(--display); font-weight: 700; font-size: clamp(13px, 1.1vw, 16px); word-break: break-word; }
+  .qrcard {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: clamp(200px, 18vw, 280px);
+    padding: 14px;
+    border: 1px solid var(--hazard);
+    background: var(--bg);
+  }
+  .qrcard__qr { width: 100%; aspect-ratio: 1; padding: 8px; background: #ffffff; }
+  .qrcard__qr svg { display: block; width: 100%; height: 100%; }
+
+  /* ---------- bottom controls ---------- */
+  .ctrl {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 10px var(--gap) calc(10px + env(safe-area-inset-bottom, 0px));
+    border-top: 1px solid var(--line);
+    background: var(--bg);
+  }
+  .ctrl__dots { flex: 1; display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; }
+  .ctrl__dot {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding: 0;
+    border: 0;
+    background: none;
+    color: var(--muted);
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    text-align: left;
+    cursor: pointer;
+  }
+  .ctrl__dot::before {
+    content: "";
+    display: block;
+    height: 3px;
+    background: var(--line-strong);
+    transition: background 0.2s ease;
+  }
+  .ctrl__dot.is-past::before { background: var(--hazard-dim); }
+  .ctrl__dot.is-active::before { background: var(--hazard); }
+  .ctrl__dot.is-active { color: var(--fg); }
+  .ctrl__dot:hover { color: var(--hazard); }
+  .ctrl__hint { white-space: nowrap; }
+
+  /* ---------- responsive ---------- */
+  @media (max-width: 1100px) {
+    .path { grid-template-columns: 1fr 1fr; }
+    .path__arrow { display: none; }
+    .partner { grid-template-columns: 1fr 1fr; }
+    .partner .qrcard { grid-column: 1 / -1; flex-direction: row; width: auto; align-items: center; }
+    .partner .qrcard__qr { width: 160px; flex-shrink: 0; }
+    .ctrl__hint { display: none; }
+  }
+  @media (max-width: 760px) {
+    .slide__inner { justify-content: flex-start; }
+    .focus, .tl, .path, .partner { grid-template-columns: 1fr; }
+    .tl::before { left: 7px; right: auto; top: 0; bottom: 0; width: 2px; height: auto; background: var(--hazard); }
+    .tl__step { padding-left: 28px; }
+    .tl__node { position: absolute; left: 0; top: 4px; }
+    .tl__step--launch .tl__node { left: -3px; }
+    .partner .qrcard { flex-direction: column; }
+    .ctrl__dot span { display: none; }
+  }
+</style>
+</head>
+<body>
+<div class="grain" aria-hidden="true"></div>
+
+<header class="top">
+  <div class="top__left">
+    <a href="index.html" class="logo" title="XUX is a temporary working name">XUX<span>.</span><span class="logo__tag">Working name</span></a>
+    <div class="top__title">
+      <span class="label label--fg" style="display:block">Work system</span>
+      <span class="label">Partner briefing // Brand under construction</span>
+    </div>
+  </div>
+  <div class="top__right">
+    <a href="index.html" class="btn btn--back" aria-label="Back to website">◂ <span>Website</span></a>
+    <button class="btn btn--sq" type="button" id="fs-toggle" aria-label="Toggle fullscreen" title="Fullscreen (F)">
+      <svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8">
+        <path d="M3 9V3h6M21 9V3h-6M3 15v6h6M21 15v6h-6" />
+      </svg>
+    </button>
+    <button class="btn btn--sq theme-toggle" type="button" aria-pressed="false" aria-label="Switch to light theme">
+      <svg class="theme-toggle__icon theme-toggle__icon--sun" viewBox="0 0 24 24" width="16" height="16" aria-hidden="true">
+        <circle cx="12" cy="12" r="4.5" fill="none" stroke="currentColor" stroke-width="1.6" />
+        <g stroke="currentColor" stroke-width="1.6" stroke-linecap="round">
+          <line x1="12" y1="1.5" x2="12" y2="4.5" /><line x1="12" y1="19.5" x2="12" y2="22.5" />
+          <line x1="1.5" y1="12" x2="4.5" y2="12" /><line x1="19.5" y1="12" x2="22.5" y2="12" />
+          <line x1="4.4" y1="4.4" x2="6.5" y2="6.5" /><line x1="17.5" y1="17.5" x2="19.6" y2="19.6" />
+          <line x1="4.4" y1="19.6" x2="6.5" y2="17.5" /><line x1="17.5" y1="6.5" x2="19.6" y2="4.4" />
+        </g>
+      </svg>
+      <svg class="theme-toggle__icon theme-toggle__icon--moon" viewBox="0 0 24 24" width="16" height="16" aria-hidden="true">
+        <path d="M20.5 14.5A8.5 8.5 0 1 1 9.5 3.5a7 7 0 0 0 11 11Z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" />
+      </svg>
+    </button>
+  </div>
+</header>
+
+<main class="deck" aria-roledescription="carousel" aria-label="XUX work system">
+  <div class="deck__nav" role="group" aria-label="Slide navigation">
+    <button class="btn btn--sq" type="button" id="prev" aria-label="Previous slide">◂</button>
+    <span class="label label--fg deck__count" id="count">01 / 04</span>
+    <button class="btn btn--sq" type="button" id="next" aria-label="Next slide">▸</button>
+  </div>
+  <div class="deck__track" id="track">
+
+    <!-- ===== 01 — XUX AT FIRST SIGHT ===== -->
+    <section class="slide" aria-roledescription="slide" aria-label="1 of 4: What XUX focuses on">
+      <div class="slide__bar"><span>01 / XUX at first sight</span></div>
+      <div class="slide__inner">
+        <h2 class="anim">Usable <em>where humans barely can.</em></h2>
+        <p class="slide__lead anim">XUX makes complex products understandable, usable and safe for the people who operate them, in space and other extreme environments. Three focus areas:</p>
+        <div class="focus anim">
+          <div class="panel">
+            <i class="corner tl"></i><i class="corner br"></i>
+            <span class="focus__num">01</span>
+            <h3>HMI design</h3>
+            <p>The screens, controls and tools operators actually touch.</p>
+            <ul><li>Operator &amp; ground-control UI</li><li>Mission tools</li><li>Handheld hardware</li></ul>
+          </div>
+          <div class="panel">
+            <i class="corner tl"></i><i class="corner br"></i>
+            <span class="focus__num">02</span>
+            <h3>Human–machine interaction</h3>
+            <p>How people and machines share decisions when workload spikes.</p>
+            <ul><li>Alarm &amp; layout logic</li><li>Navigation under stress</li><li>Control review</li></ul>
+          </div>
+          <div class="panel panel--hl">
+            <i class="corner tl"></i><i class="corner br"></i>
+            <span class="focus__num">03</span>
+            <h3>Extreme-environment usability</h3>
+            <p>Testing what still works when the body is pushed to its limit.</p>
+            <ul><li>Gloved input</li><li>Vibration &amp; CO2 load</li><li>Time pressure</li></ul>
+          </div>
+        </div>
+        <div class="strip anim">
+          <span>Built on NASA-STD-3001</span><span>ECSS-E-ST-10-11C</span><span>Numbers, not adjectives</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== 02 — TIMELINE TO LAUNCH ===== -->
+    <section class="slide" aria-roledescription="slide" aria-label="2 of 4: Timeline to launch">
+      <div class="slide__bar"><span>02 / Timeline to launch</span></div>
+      <div class="slide__inner">
+        <h2 class="anim">Contracts first. <em>Clients from day one.</em></h2>
+        <p class="slide__lead anim">Experience and design contracts are secured before the company is founded, so work with partners starts on launch day, not months after.</p>
+        <div class="tl anim">
+          <div class="tl__step tl__step--now">
+            <span class="tl__node"></span>
+            <span class="label label--hz">Now · 2026</span>
+            <div class="panel">
+              <h3>Research</h3>
+              <ul><li>Master's thesis, FH JOANNEUM</li><li>Methods for gloved &amp; high-stress use</li><li>Talks with space teams</li></ul>
+            </div>
+          </div>
+          <div class="tl__step tl__step--next">
+            <span class="tl__node"></span>
+            <span class="label label--hz">2026 – 2027</span>
+            <div class="panel panel--hl">
+              <h3>Pre-launch contracts</h3>
+              <ul><li>Secure first experience &amp; design contracts</li><li>Agree partner scopes &amp; start dates</li><li>ESA BIC Austria &amp; national funding</li></ul>
+            </div>
+          </div>
+          <div class="tl__step tl__step--launch">
+            <span class="tl__node"></span>
+            <span class="label label--fg">Q1 2027 · Launch</span>
+            <div class="panel">
+              <h3>Day one</h3>
+              <ul><li>Incorporation in Styria</li><li>Contracted work starts immediately</li><li>Clients &amp; partners onboard</li></ul>
+            </div>
+          </div>
+          <div class="tl__step">
+            <span class="tl__node"></span>
+            <span class="label">2027 +</span>
+            <div class="panel">
+              <h3>Scale</h3>
+              <ul><li>Human-factors audits</li><li>Licensed interface frameworks</li><li>Team training</li></ul>
+            </div>
+          </div>
+        </div>
+        <div class="rule anim">
+          <span class="label label--hz">Principle</span>
+          <b>No empty launch: the first clients are signed before the company exists.</b>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== 03 — HOW WE WORK ===== -->
+    <section class="slide" aria-roledescription="slide" aria-label="3 of 4: How we work with partners">
+      <div class="slide__bar"><span>03 / How we work with partners</span></div>
+      <div class="slide__inner">
+        <h2 class="anim">From first impression <em>to product experience.</em></h2>
+        <p class="slide__lead anim">Every partnership starts at the surface and works inward, so each step builds trust and evidence for the next.</p>
+        <div class="path anim">
+          <div class="panel">
+            <span class="path__step">01</span>
+            <span class="label label--hz">Start · Brand</span>
+            <h3>Branding &amp; communication</h3>
+            <p>Brand review and the usability of web and brand materials: website, pitch decks, mission visuals. Fast, visible results.</p>
+            <span class="label path__level">Level 01 · Signal</span>
+          </div>
+          <div class="path__arrow" aria-hidden="true">▸</div>
+          <div class="panel">
+            <span class="path__step">02</span>
+            <span class="label label--hz">Then · Product</span>
+            <h3>Product usability barriers</h3>
+            <p>Move into the product itself: operator screens, tools and hardware. Find where users struggle, hesitate or make errors.</p>
+            <span class="label path__level">Level 02 · Interface / Experience</span>
+          </div>
+          <div class="path__arrow" aria-hidden="true">▸</div>
+          <div class="panel panel--hl">
+            <span class="path__step">03</span>
+            <span class="label label--hz">Deep · Research</span>
+            <h3>Research &amp; solve</h3>
+            <p>Observe the real task, measure under stress, specify design rules with numbers, redesign and validate with users.</p>
+            <span class="label path__level">Level 03 · Assurance</span>
+          </div>
+          <div class="path__arrow" aria-hidden="true">▸</div>
+          <div class="path__out">
+            <span class="label">Outcome</span>
+            <b>A high-level product experience.</b>
+            <p>Products operators understand, trust and use correctly, even at the edge.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== 04 — PARTNER ===== -->
+    <section class="slide" aria-roledescription="slide" aria-label="4 of 4: Become a day-one partner">
+      <div class="slide__bar"><span>04 / Next step</span></div>
+      <div class="slide__inner">
+        <h2 class="anim">Be a <em>day-one partner.</em></h2>
+        <div class="partner anim">
+          <div class="panel">
+            <span class="label label--hz">Who we're looking for</span>
+            <ul>
+              <li>Teams with an operator screen, ground tool or hardware that has to work in hard conditions</li>
+              <li>Products whose brand and web presence don't yet match their engineering</li>
+              <li>Partners open to research and testing with real operators</li>
+            </ul>
+          </div>
+          <div class="panel">
+            <span class="label label--hz">Let's talk</span>
+            <div class="contact-list">
+              <a href="mailto:emrah.oezbay@edu.fh-joanneum.at"><span class="label">Email // FH JOANNEUM</span><span class="v">emrah.oezbay@edu.fh-joanneum.at</span></a>
+              <a href="https://www.linkedin.com/in/ozbayemrah" target="_blank" rel="noopener"><span class="label">LinkedIn</span><span class="v">in/ozbayemrah</span></a>
+            </div>
+          </div>
+          <div class="qrcard">
+            <i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>
+            <div class="qrcard__qr" data-vcard-qr role="img" aria-label="QR code: save Emrah Özbay's contact card"></div>
+            <div>
+              <span class="label label--hz" style="display:block">Scan to save contact</span>
+              <a class="btn" data-vcard-download href="#" download="Emrah-Ozbay.vcf" style="margin-top:8px;width:100%">Save contact (.vcf)</a>
+            </div>
+          </div>
+        </div>
+        <p class="label anim">"XUX" is a temporary working name. The brand is under construction.</p>
+      </div>
+    </section>
+
+  </div>
+</main>
+
+<nav class="ctrl" aria-label="Slide controls">
+  <div class="ctrl__dots" id="dots">
+    <button class="ctrl__dot" type="button"><span>01 Focus</span></button>
+    <button class="ctrl__dot" type="button"><span>02 Timeline</span></button>
+    <button class="ctrl__dot" type="button"><span>03 How we work</span></button>
+    <button class="ctrl__dot" type="button"><span>04 Partner</span></button>
+  </div>
+  <span class="label ctrl__hint">← → keys · F fullscreen</span>
+</nav>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js"></script>
+<script src="assets/vcard.js"></script>
+<script>
+  /* theme toggle — same storage key as index.html and the portfolio */
+  (function () {
+    var root = document.documentElement;
+    var btn = document.querySelector(".theme-toggle");
+    function isLight() { return root.getAttribute("data-theme") === "light"; }
+    function update() {
+      btn.setAttribute("aria-pressed", String(isLight()));
+      btn.setAttribute("aria-label", isLight() ? "Switch to dark theme" : "Switch to light theme");
+    }
+    update();
+    btn.addEventListener("click", function () {
+      var light = !isLight();
+      if (light) root.setAttribute("data-theme", "light"); else root.removeAttribute("data-theme");
+      try { localStorage.setItem("theme", light ? "light" : "dark"); } catch (e) {}
+      update();
+    });
+  })();
+
+  /* deck: arrows / space / PageUp-Down / Home-End, swipe, dots,
+     #2-style deep links, F for fullscreen */
+  (function () {
+    var track = document.getElementById("track");
+    var slides = Array.prototype.slice.call(track.children);
+    var dots = Array.prototype.slice.call(document.getElementById("dots").children);
+    var prev = document.getElementById("prev");
+    var next = document.getElementById("next");
+    var count = document.getElementById("count");
+    var n = slides.length, cur = -1;
+    function pad(i) { return (i < 9 ? "0" : "") + (i + 1); }
+
+    function go(i) {
+      i = Math.max(0, Math.min(n - 1, i));
+      if (i === cur) return;
+      cur = i;
+      track.style.transform = "translateX(" + (-100 * i) + "%)";
+      slides.forEach(function (s, k) {
+        var on = k === i;
+        s.classList.toggle("is-active", on);
+        s.setAttribute("aria-hidden", String(!on));
+        s.inert = !on;
+        if (on) s.scrollTop = 0;
+      });
+      dots.forEach(function (d, k) {
+        d.classList.toggle("is-active", k === i);
+        d.classList.toggle("is-past", k < i);
+        d.setAttribute("aria-current", k === i ? "step" : "false");
+      });
+      prev.disabled = i === 0;
+      next.disabled = i === n - 1;
+      count.textContent = pad(i) + " / " + pad(n - 1);
+      history.replaceState(null, "", "#" + (i + 1));
+    }
+
+    prev.addEventListener("click", function () { go(cur - 1); });
+    next.addEventListener("click", function () { go(cur + 1); });
+    dots.forEach(function (d, k) { d.addEventListener("click", function () { go(k); }); });
+
+    function toggleFs() {
+      if (!document.fullscreenElement) { if (document.documentElement.requestFullscreen) document.documentElement.requestFullscreen().catch(function () {}); }
+      else if (document.exitFullscreen) document.exitFullscreen();
+    }
+    document.getElementById("fs-toggle").addEventListener("click", toggleFs);
+
+    document.addEventListener("keydown", function (e) {
+      if (e.altKey || e.ctrlKey || e.metaKey) return;
+      var k = e.key;
+      if (k === "ArrowRight" || k === "PageDown" || (k === " " && !e.shiftKey)) { e.preventDefault(); go(cur + 1); }
+      else if (k === "ArrowLeft" || k === "PageUp" || (k === " " && e.shiftKey)) { e.preventDefault(); go(cur - 1); }
+      else if (k === "Home") { e.preventDefault(); go(0); }
+      else if (k === "End") { e.preventDefault(); go(n - 1); }
+      else if (k === "f" || k === "F") { toggleFs(); }
+    });
+
+    var x0 = null, y0 = null;
+    track.addEventListener("touchstart", function (e) { x0 = e.touches[0].clientX; y0 = e.touches[0].clientY; }, { passive: true });
+    track.addEventListener("touchend", function (e) {
+      if (x0 === null) return;
+      var dx = e.changedTouches[0].clientX - x0, dy = e.changedTouches[0].clientY - y0;
+      if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy) * 1.5) go(cur + (dx < 0 ? 1 : -1));
+      x0 = null;
+    });
+
+    var start = parseInt(location.hash.slice(1), 10);
+    go(isNaN(start) ? 0 : start - 1);
+    window.addEventListener("hashchange", function () {
+      var h = parseInt(location.hash.slice(1), 10);
+      if (!isNaN(h)) go(h - 1);
+    });
+  })();
+</script>
+</body>
+</html>
