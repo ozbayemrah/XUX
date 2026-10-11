@@ -610,23 +610,33 @@
   }
   .wip-note b { color: var(--hazard); letter-spacing: 0.1em; text-transform: uppercase; }
 
-  /* ---------- contact card QR (vCard) ---------- */
+  /* ---------- hero contact card QR (vCard) ---------- */
+  .hero__top {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: calc(var(--gap) * 1.5);
+    align-items: end;
+  }
   .vcard {
     position: relative;
-    display: grid;
-    grid-template-columns: auto 1fr;
-    gap: calc(var(--gap) * 1.2);
-    align-items: center;
-    margin-top: 16px;
-    padding: 22px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    width: 268px;
+    padding: 18px;
     border: 1px solid var(--hazard);
     background: var(--bg-panel-alt);
   }
+  .vcard__head {
+    display: flex;
+    justify-content: space-between;
+    padding-bottom: 10px;
+    border-bottom: 1px dashed var(--line-strong);
+  }
   /* QR stays dark-on-white in both themes — inverted codes scan badly */
   .vcard__qr {
-    position: relative;
-    width: 220px;
-    height: 220px;
+    width: 100%;
+    aspect-ratio: 1;
     padding: 10px;
     background: #ffffff;
   }
@@ -641,18 +651,13 @@
     text-transform: uppercase;
     color: #8a8f93;
   }
-  .vcard__body { display: flex; flex-direction: column; gap: 10px; }
-  .vcard__body h3 {
-    font-family: var(--display);
-    font-weight: 700;
-    font-size: clamp(20px, 2.2vw, 26px);
-    text-transform: uppercase;
-    line-height: 1.1;
+  .vcard__hint { color: var(--muted); font-size: 12px; line-height: 1.5; }
+  .vcard__btn { width: 100%; padding-left: 12px; padding-right: 12px; }
+  @media (max-width: 900px) {
+    .hero__top { grid-template-columns: 1fr; align-items: start; }
   }
-  .vcard__body p { color: var(--muted); max-width: 52ch; }
-  .vcard__actions { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 6px; }
-  @media (max-width: 600px) {
-    .vcard { grid-template-columns: 1fr; justify-items: start; }
+  @media (max-width: 480px) {
+    .vcard { width: 100%; }
   }
 
   /* ---------- footer ---------- */
@@ -799,6 +804,8 @@
 <main id="top">
 
   <div class="hero">
+   <div class="hero__top">
+   <div class="hero__main">
     <div class="hero__eyebrow">
       <span class="label label--hz">XUX Studio (working name)</span>
       <span class="label">Styria, Austria</span>
@@ -810,6 +817,15 @@
       <a class="btn btn--lg" href="#contact">Book a conversation</a>
       <a class="btn btn--lg" href="#offer">What we do</a>
     </div>
+   </div>
+    <aside class="vcard">
+      <i class="corner tl corner--on"></i><i class="corner tr corner--on"></i><i class="corner bl corner--on"></i><i class="corner br corner--on"></i>
+      <div class="vcard__head"><span class="label label--hz">Contact card</span><span class="label">Scan to save</span></div>
+      <div class="vcard__qr" id="vcard-qr" role="img" aria-label="QR code: save Emrah Özbay's contact card"></div>
+      <p class="vcard__hint">Point your camera here, add me to your phone. Phone, email, website, LinkedIn.</p>
+      <a class="btn vcard__btn" id="vcard-download" href="#contact" download="Emrah-Ozbay.vcf">Save contact (.vcf)</a>
+    </aside>
+   </div>
     <div class="readout">
       <div class="readout__cell"><span class="label"><span class="dot"></span>Suit pressure</span><b>4.3 psi</b><small>Gloved hands lose touch and tire fast</small></div>
       <div class="readout__cell"><span class="label"><span class="dot"></span>Load</span><b>Vibration</b><small>Small targets become hard to hit</small></div>
@@ -979,19 +995,6 @@
         <i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>
         <span class="label">Portfolio</span><span class="v">behance.net/ozbayemrah</span>
       </a>
-    </div>
-
-    <div class="vcard">
-      <i class="corner tl corner--on"></i><i class="corner tr corner--on"></i><i class="corner bl corner--on"></i><i class="corner br corner--on"></i>
-      <div class="vcard__qr" id="vcard-qr" role="img" aria-label="QR code: save Emrah Özbay's contact card"></div>
-      <div class="vcard__body">
-        <span class="label label--hz">Contact card // Scan to save</span>
-        <h3>Point your camera here, add me to your phone.</h3>
-        <p>The code holds a contact card (name, work phone, FH JOANNEUM and personal email, website, LinkedIn, location). Your phone's camera will offer to save it straight to your contacts.</p>
-        <div class="vcard__actions">
-          <a class="btn" id="vcard-download" href="#contact" download="Emrah-Ozbay.vcf">Save contact (.vcf)</a>
-        </div>
-      </div>
     </div>
 
     <div class="wip-note">
