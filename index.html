@@ -625,8 +625,8 @@
   /* QR stays dark-on-white in both themes — inverted codes scan badly */
   .vcard__qr {
     position: relative;
-    width: 188px;
-    height: 188px;
+    width: 220px;
+    height: 220px;
     padding: 10px;
     background: #ffffff;
   }
@@ -987,7 +987,7 @@
       <div class="vcard__body">
         <span class="label label--hz">Contact card // Scan to save</span>
         <h3>Point your camera here, add me to your phone.</h3>
-        <p>The code holds a contact card (name, email, LinkedIn, location). Your phone's camera will offer to save it straight to your contacts.</p>
+        <p>The code holds a contact card (name, work phone, FH JOANNEUM and personal email, website, LinkedIn, location). Your phone's camera will offer to save it straight to your contacts.</p>
         <div class="vcard__actions">
           <a class="btn" id="vcard-download" href="#contact" download="Emrah-Ozbay.vcf">Save contact (.vcf)</a>
         </div>
@@ -1027,9 +1027,11 @@
     last: "Özbay",
     org: "XUX Studio (working name)",
     title: "Founder · Product & Interaction Designer",
-    email: "ozbayemrah.design@gmail.com",
-    phone: "",
-    url: "https://www.linkedin.com/in/ozbayemrah",
+    workEmail: "emrah.oezbay@edu.fh-joanneum.at",   // listed first / preferred
+    personalEmail: "ozbayemrah.design@gmail.com",
+    workPhone: "+3866767717175",
+    website: "https://ozbayemrah.github.io/XUX/",   // main URL
+    linkedin: "https://www.linkedin.com/in/ozbayemrah",
     city: "Graz",
     region: "Styria",
     country: "Austria"
@@ -1043,12 +1045,14 @@
       "N:" + c.last + ";" + c.first + ";;;",
       "FN:" + c.first + " " + c.last,
       "ORG:" + c.org,
-      "TITLE:" + c.title,
-      "EMAIL;TYPE=INTERNET:" + c.email
+      "TITLE:" + c.title
     ];
-    if (c.phone) lines.push("TEL;TYPE=CELL:" + c.phone);
+    if (c.workPhone) lines.push("TEL;TYPE=WORK,VOICE,PREF:" + c.workPhone);
+    if (c.workEmail) lines.push("EMAIL;TYPE=INTERNET,WORK,PREF:" + c.workEmail);
+    if (c.personalEmail) lines.push("EMAIL;TYPE=INTERNET,HOME:" + c.personalEmail);
+    if (c.website) lines.push("URL;TYPE=WORK:" + c.website);
+    if (c.linkedin) lines.push("URL;TYPE=LinkedIn:" + c.linkedin);
     lines.push(
-      "URL:" + c.url,
       "ADR;TYPE=WORK:;;;" + c.city + ";" + c.region + ";;" + c.country,
       "END:VCARD"
     );
