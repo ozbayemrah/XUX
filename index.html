@@ -1,0 +1,370 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>XUX Studio — Interfaces for people under pressure</title>
+<meta name="description" content="Human-factors and interface design for space and extreme environments. Styria, Austria.">
+<meta property="og:title" content="XUX Studio — Interfaces for people under pressure">
+<meta property="og:description" content="Human-factors and interface design for space and extreme environments.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0c0d0e; --panel:#141618; --line:#2a2d31; --line-2:#3a3e43;
+    --text:#e9e7e2; --muted:#9a9c9f; --dim:#6b6e72;
+    --signal:#ff5a1f;
+    --mono:"IBM Plex Mono", ui-monospace, Menlo, monospace;
+    --sans:"Archivo", system-ui, sans-serif;
+    --max:1180px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{background:var(--bg);color:var(--text);font-family:var(--sans);font-size:17px;line-height:1.55;-webkit-font-smoothing:antialiased}
+  a{color:inherit}
+  .wrap{max-width:var(--max);margin:0 auto;padding:0 24px}
+  .mono{font-family:var(--mono);font-size:12.5px;letter-spacing:.04em;text-transform:uppercase;color:var(--muted)}
+  .tag{font-family:var(--mono);font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--signal)}
+
+  /* grid backdrop */
+  .grid-bg{background-image:linear-gradient(var(--line) 1px,transparent 1px),linear-gradient(90deg,var(--line) 1px,transparent 1px);background-size:64px 64px;background-position:-1px -1px}
+
+  /* header */
+  header{position:sticky;top:0;z-index:10;background:rgba(12,13,14,.88);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+  .bar{display:flex;align-items:center;justify-content:space-between;height:60px}
+  .logo{font-weight:900;font-stretch:125%;font-size:20px;letter-spacing:.02em;text-decoration:none}
+  .logo span{color:var(--signal)}
+  nav a{font-family:var(--mono);font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);text-decoration:none;margin-left:26px}
+  nav a:hover{color:var(--text)}
+  nav .cta{color:var(--bg);background:var(--text);padding:8px 14px}
+  nav .cta:hover{background:var(--signal);color:var(--bg)}
+
+  /* hero */
+  .hero{border-bottom:1px solid var(--line);position:relative;overflow:hidden}
+  .hero .wrap{padding-top:96px;padding-bottom:88px;position:relative}
+  .hero h1{font-weight:850;font-stretch:112%;font-size:clamp(40px,7.2vw,92px);line-height:.98;letter-spacing:-.01em;max-width:13ch;margin:22px 0 28px}
+  .hero h1 em{font-style:normal;color:var(--signal)}
+  .hero p.lead{font-size:clamp(18px,2vw,21px);color:#c9c7c2;max-width:58ch}
+  .hero .actions{margin-top:38px;display:flex;gap:14px;flex-wrap:wrap}
+  .btn{display:inline-block;font-family:var(--mono);font-size:13px;letter-spacing:.06em;text-transform:uppercase;text-decoration:none;padding:14px 20px;border:1px solid var(--text)}
+  .btn.solid{background:var(--signal);border-color:var(--signal);color:#0c0d0e;font-weight:500}
+  .btn:hover{border-color:var(--signal);color:var(--signal)}
+  .btn.solid:hover{background:transparent}
+  .readout{margin-top:72px;display:grid;grid-template-columns:repeat(4,1fr);border-top:1px solid var(--line-2)}
+  .readout div{padding:18px 18px 0 0}
+  .readout div+div{padding-left:18px;border-left:1px solid var(--line)}
+  .readout b{display:block;font-weight:800;font-stretch:115%;font-size:26px;margin:6px 0 2px}
+  .readout small{color:var(--muted);font-size:14px}
+
+  /* sections */
+  section{border-bottom:1px solid var(--line)}
+  section .wrap{padding-top:96px;padding-bottom:96px}
+  .head{display:grid;grid-template-columns:220px 1fr;gap:32px;margin-bottom:56px}
+  .head h2{font-weight:800;font-stretch:110%;font-size:clamp(30px,4vw,48px);line-height:1.04;max-width:20ch}
+  .head p{color:var(--muted);margin-top:16px;max-width:60ch}
+
+  .cards{display:grid;gap:1px;background:var(--line);border:1px solid var(--line)}
+  .c2{grid-template-columns:1fr 1fr}
+  .c3{grid-template-columns:repeat(3,1fr)}
+  .card{background:var(--bg);padding:32px 28px 34px;position:relative}
+  .card h3{font-weight:750;font-stretch:108%;font-size:24px;line-height:1.15;margin:14px 0 12px}
+  .card p{color:#bdbbb6;font-size:16px}
+  .card ul{list-style:none;margin-top:20px;border-top:1px solid var(--line)}
+  .card li{font-size:15px;color:#cfcdc8;padding:10px 0;border-bottom:1px solid var(--line);display:flex;gap:10px}
+  .card li::before{content:"—";color:var(--dim)}
+  .card .foot{margin-top:22px}
+  .card.hl{background:var(--panel)}
+  .card.hl::before{content:"";position:absolute;left:0;top:0;width:3px;height:100%;background:var(--signal)}
+
+  /* method */
+  .steps{display:grid;grid-template-columns:repeat(5,1fr);border-top:1px solid var(--line-2)}
+  .step{padding:22px 18px 0 0}
+  .step+.step{padding-left:18px;border-left:1px solid var(--line)}
+  .step b{display:block;font-weight:800;font-stretch:115%;font-size:22px;margin:10px 0 8px}
+  .step p{color:var(--muted);font-size:15px}
+  .note{margin-top:40px;padding:18px 22px;border:1px solid var(--line-2);color:#c9c7c2;font-size:16px}
+  .note b{color:var(--text)}
+
+  /* research rows */
+  .spec{border:1px solid var(--line)}
+  .spec .row{display:grid;grid-template-columns:180px 1fr 1fr;border-bottom:1px solid var(--line)}
+  .spec .row:last-child{border-bottom:0}
+  .spec .row>div{padding:20px 22px}
+  .spec .row>div+div{border-left:1px solid var(--line)}
+  .spec .th{background:var(--panel)}
+  .spec .th div{font-family:var(--mono);font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+  .spec .k{font-family:var(--mono);font-size:13px;text-transform:uppercase;letter-spacing:.05em;color:var(--muted)}
+  .spec h4{font-weight:750;font-stretch:108%;font-size:20px;margin-bottom:6px}
+  .spec p{color:#c4c2bd;font-size:15.5px}
+
+  /* roadmap */
+  .road{display:grid;grid-template-columns:repeat(3,1fr);position:relative}
+  .road::before{content:"";position:absolute;left:0;right:0;top:7px;height:1px;background:var(--line-2)}
+  .ph{padding-right:28px;position:relative}
+  .ph::before{content:"";display:block;width:15px;height:15px;border:1px solid var(--text);background:var(--bg);margin-bottom:22px}
+  .ph.now::before{background:var(--signal);border-color:var(--signal)}
+  .ph h3{font-weight:750;font-stretch:108%;font-size:22px;margin:8px 0 10px}
+  .ph p{color:var(--muted);font-size:15.5px}
+
+  /* founder */
+  .founder{display:grid;grid-template-columns:1fr 1.3fr;gap:56px;align-items:start}
+  .founder .id{border:1px solid var(--line);padding:28px}
+  .founder .id h3{font-weight:800;font-stretch:110%;font-size:30px;margin:10px 0 4px}
+  .founder .id dl{margin-top:22px;border-top:1px solid var(--line)}
+  .founder .id dl div{display:flex;justify-content:space-between;gap:16px;padding:11px 0;border-bottom:1px solid var(--line);font-size:15px}
+  .founder .id dt{font-family:var(--mono);font-size:12px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);padding-top:2px}
+  .founder .id dd{text-align:right}
+  .founder .text p{color:#cfcdc8;margin-bottom:18px;font-size:18px}
+
+  /* contact */
+  .contact .wrap{padding-top:110px;padding-bottom:110px}
+  .contact h2{font-weight:850;font-stretch:115%;font-size:clamp(36px,6vw,76px);line-height:1;max-width:16ch;margin:18px 0 26px}
+  .links{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--line);border:1px solid var(--line);margin-top:48px}
+  .links a{background:var(--bg);padding:24px;text-decoration:none;display:block}
+  .links a:hover{background:var(--panel)}
+  .links a:hover .v{color:var(--signal)}
+  .links .v{display:block;margin-top:8px;font-size:17px;word-break:break-word}
+
+  footer .wrap{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap;padding-top:28px;padding-bottom:40px}
+
+  @media (max-width:900px){
+    nav a:not(.cta){display:none}
+    .head{grid-template-columns:1fr;gap:12px;margin-bottom:40px}
+    .c2,.c3{grid-template-columns:1fr}
+    .readout{grid-template-columns:1fr 1fr}
+    .readout div:nth-child(3){padding-left:0;border-left:0}
+    .readout div{padding-bottom:16px}
+    .steps{grid-template-columns:1fr}
+    .step,.step+.step{padding:18px 0;border-left:0;border-bottom:1px solid var(--line)}
+    .spec .row{grid-template-columns:1fr}
+    .spec .row>div+div{border-left:0;border-top:1px solid var(--line)}
+    .spec .th{display:none}
+    .road{grid-template-columns:1fr;gap:34px}
+    .road::before{display:none}
+    .founder{grid-template-columns:1fr;gap:32px}
+    .links{grid-template-columns:1fr}
+    section .wrap{padding-top:72px;padding-bottom:72px}
+    .hero .wrap{padding-top:64px;padding-bottom:64px}
+    .readout{margin-top:52px}
+    .readout b{font-size:21px}
+  }
+  @media (max-width:480px){
+    .wrap{padding:0 16px}
+    .card{padding:26px 20px}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap bar">
+    <a href="#top" class="logo">XUX<span>.</span></a>
+    <nav>
+      <a href="#offer">Services</a>
+      <a href="#method">Method</a>
+      <a href="#research">Research</a>
+      <a href="#about">About</a>
+      <a href="#contact" class="cta">Contact</a>
+    </nav>
+  </div>
+</header>
+
+<main id="top">
+
+  <div class="hero grid-bg">
+    <div class="wrap">
+      <div class="tag">XUX Studio · Styria, Austria · Est. 2027</div>
+      <h1>Interfaces for people working <em>under pressure.</em></h1>
+      <p class="lead">Human-factors and interface design for space and extreme environments. We design, test and specify how people control machines when gloves, vibration, CO2 and time pressure take away their precision.</p>
+      <div class="actions">
+        <a class="btn solid" href="#contact">Book a conversation</a>
+        <a class="btn" href="#offer">What we do</a>
+      </div>
+      <div class="readout">
+        <div><span class="mono">Suit pressure</span><b>4.3 psi</b><small>Gloved hands lose touch and tire fast</small></div>
+        <div><span class="mono">Load</span><b>Vibration</b><small>Small targets become hard to hit</small></div>
+        <div><span class="mono">Air</span><b>CO2 buildup</b><small>Hypercapnia slows thinking</small></div>
+        <div><span class="mono">Time</span><b>Alarms</b><small>Seconds decide the outcome</small></div>
+      </div>
+    </div>
+  </div>
+
+  <section id="problem">
+    <div class="wrap">
+      <div class="head">
+        <div class="mono">01 / Problem</div>
+        <div>
+          <h2>The hardware is world-class. The human interface often isn't.</h2>
+          <p>Space teams build extraordinary systems, then hand them to people who must operate them in the worst conditions a body can work in. Two gaps show up again and again.</p>
+        </div>
+      </div>
+      <div class="cards c2">
+        <div class="card">
+          <div class="tag">Physical</div>
+          <h3>Tools built for bare hands, used in pressurised gloves</h3>
+          <p>A pressurised suit glove pushes back against every finger movement and dulls the sense of touch. Small knobs, fine triggers and precise grips cause fatigue and errors.</p>
+        </div>
+        <div class="card">
+          <div class="tag">Digital</div>
+          <h3>Every console looks different, and stress makes it worse</h3>
+          <p>Telemetry and control screens vary by vendor and mission. Under vibration, workload and alarm noise, operators lose seconds finding the control that matters.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="offer">
+    <div class="wrap">
+      <div class="head">
+        <div class="mono">02 / Services</div>
+        <div>
+          <h2>Three ways to work with us.</h2>
+          <p>Start where you are. Most teams begin with how they look and are understood, then move into the interfaces their operators use.</p>
+        </div>
+      </div>
+      <div class="cards c3">
+        <div class="card">
+          <div class="mono">Level 01</div>
+          <h3>Signal</h3>
+          <p>A clear brand and visual language, so your engineering is understood by customers, agencies and investors.</p>
+          <ul>
+            <li>Brand audit and positioning</li>
+            <li>Identity and graphic language</li>
+            <li>Pitch, website and mission visuals</li>
+          </ul>
+        </div>
+        <div class="card hl">
+          <div class="mono">Level 02</div>
+          <h3>Interface</h3>
+          <p>Design and testing of what operators actually touch: ground-control screens, mission tools and handheld hardware.</p>
+          <ul>
+            <li>HMI and operator UI design</li>
+            <li>Usability testing under stress</li>
+            <li>Alarm, layout and control review</li>
+          </ul>
+        </div>
+        <div class="card">
+          <div class="mono">Level 03 · From 2027</div>
+          <h3>Assurance</h3>
+          <p>Audits against our published, numbered design rules, plus licensed frameworks and component kits for your team.</p>
+          <ul>
+            <li>Human-factors design audits</li>
+            <li>Licensed interface frameworks</li>
+            <li>Team training</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="method">
+    <div class="wrap">
+      <div class="head">
+        <div class="mono">03 / Method</div>
+        <div>
+          <h2>Numbers, not adjectives.</h2>
+          <p>Every project follows the same loop, so each design decision can be traced back to a measurement.</p>
+        </div>
+      </div>
+      <div class="steps">
+        <div class="step"><span class="mono">01</span><b>Observe</b><p>Watch the real task: ops room, test stand, glove box or analogue mission.</p></div>
+        <div class="step"><span class="mono">02</span><b>Measure</b><p>Test it under controlled stress: gloves, vibration, time pressure, workload.</p></div>
+        <div class="step"><span class="mono">03</span><b>Specify</b><p>Write a design rule with numbers, such as minimum target size at a given load.</p></div>
+        <div class="step"><span class="mono">04</span><b>Validate</b><p>Check it with users, in research and in client pilots.</p></div>
+        <div class="step"><span class="mono">05</span><b>Apply</b><p>Build it into your product, and into our shared rule set.</p></div>
+      </div>
+      <div class="note"><b>Built on existing standards.</b> Our work extends NASA-STD-3001 (Vol. 2, Human Factors) and ECSS-E-ST-10-11C (Human Factors Engineering) with measured rules for gloved input and high-stress screens.</div>
+    </div>
+  </section>
+
+  <section id="research">
+    <div class="wrap">
+      <div class="head">
+        <div class="mono">04 / Research</div>
+        <div>
+          <h2>Two research tracks, running now.</h2>
+          <p>Developed as a Master's thesis at FH JOANNEUM, Graz, in 2026. Results feed directly into our client work.</p>
+        </div>
+      </div>
+      <div class="spec">
+        <div class="row th"><div>Track</div><div>Question</div><div>Output</div></div>
+        <div class="row">
+          <div class="k">T1 · Physical</div>
+          <div><h4>Gloved tool affordances</h4><p>Which handle, lock and trigger shapes let a gloved hand work with the whole palm, instead of fine finger movements?</p></div>
+          <div><h4>Shape rules for hardware</h4><p>Geometries tested for task time, errors and fatigue, gloved vs. bare-handed.</p></div>
+        </div>
+        <div class="row">
+          <div class="k">T2 · Digital</div>
+          <div><h4>Telemetry under load</h4><p>How should target sizes, alarm colours and navigation change when operators are shaken, rushed or tired?</p></div>
+          <div><h4>Layout rules for screens</h4><p>Fitts's-law-based sizing under vibration, isolated alarm colour paths and flat navigation.</p></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="about">
+    <div class="wrap">
+      <div class="head">
+        <div class="mono">05 / Founder</div>
+        <div><h2>Complex interfaces, fast decisions.</h2></div>
+      </div>
+      <div class="founder">
+        <div class="id">
+          <div class="mono">Founder</div>
+          <h3>Emrah Özbay</h3>
+          <div class="mono" style="color:var(--text)">Product &amp; Interaction Designer</div>
+          <dl>
+            <div><dt>Background</dt><dd>SaaS &amp; game UX</dd></div>
+            <div><dt>Recent</dt><dd>Live-ops HUD &amp; meta systems, AAA game</dd></div>
+            <div><dt>Study</dt><dd>MA Interaction Design, FH JOANNEUM</dd></div>
+            <div><dt>Base</dt><dd>Graz, Austria</dd></div>
+          </dl>
+        </div>
+        <div class="text">
+          <p>I've spent my career designing interfaces where people make fast decisions under pressure: game HUDs, live operations tools and data-heavy SaaS products.</p>
+          <p>Recent work includes a lockout/tagout safety tool for field technicians, with slide-to-confirm actions and physical-lock steps, and a mission-control concept for orbital operations with operator approval queues and live telemetry.</p>
+          <p>Now I'm bringing that experience to space and extreme environments, where a misread screen or a missed grip has real consequences.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="roadmap">
+    <div class="wrap">
+      <div class="head">
+        <div class="mono">06 / Roadmap</div>
+        <div><h2>Where we are.</h2></div>
+      </div>
+      <div class="road">
+        <div class="ph now"><span class="tag">Now · 2026</span><h3>Research</h3><p>Thesis research at FH JOANNEUM. Building methods and talking with space teams about their real problems.</p></div>
+        <div class="ph"><span class="mono">2026 – 2027</span><h3>First projects</h3><p>Pilot design and testing work with early partners. Applying for ESA BIC Austria and national innovation funding.</p></div>
+        <div class="ph"><span class="mono">Q1 2027</span><h3>Company launch</h3><p>Incorporation in Styria. Design services, human-factors audits and licensed frameworks.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="contact" class="contact grid-bg">
+    <div class="wrap">
+      <div class="tag">07 / Contact</div>
+      <h2>Building something people operate under pressure?</h2>
+      <p class="lead" style="color:#c9c7c2;max-width:56ch">I'm looking for early partners: teams with an operator screen, a ground tool or a piece of hardware that has to work in hard conditions. Let's talk.</p>
+      <div class="links">
+        <a href="mailto:ozbayemrah@gmail.com"><span class="mono">Email</span><span class="v">ozbayemrah@gmail.com</span></a>
+        <a href="https://www.linkedin.com/in/ozbayemrah" target="_blank" rel="noopener"><span class="mono">LinkedIn</span><span class="v">in/ozbayemrah</span></a>
+        <a href="https://www.behance.net/ozbayemrah" target="_blank" rel="noopener"><span class="mono">Portfolio</span><span class="v">behance.net/ozbayemrah</span></a>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <span class="mono">XUX Studio · Graz, Styria, Austria</span>
+    <span class="mono">Rev A · 2026</span>
+  </div>
+</footer>
+
+</body>
+</html>
