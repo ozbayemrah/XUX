@@ -252,6 +252,51 @@
   .slide.is-active .anim:nth-child(4) { transition-delay: 0.24s; }
   @media (prefers-reduced-motion: reduce) { .slide .anim { opacity: 1; transform: none; transition: none; } }
 
+  /* ---------- slide header: text left, 3D viewer right ---------- */
+  .slide__hero {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(260px, 36%);
+    gap: clamp(18px, 3vw, 48px);
+    align-items: center;
+  }
+  .slide__text { display: flex; flex-direction: column; gap: clamp(14px, 2.4vh, 26px); }
+
+  .viz {
+    position: relative;
+    height: clamp(200px, 34vh, 400px);
+    border: 1px dashed var(--line-strong);
+    background:
+      radial-gradient(closest-side, var(--hazard-dim), transparent 70%),
+      var(--bg);
+    overflow: hidden;
+  }
+  .viz::after {   /* faint scanlines */
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: repeating-linear-gradient(0deg, transparent 0 3px, var(--line) 3px 4px);
+    opacity: 0.6;
+  }
+  .viz canvas {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    cursor: grab;
+    touch-action: pan-y;
+  }
+  .viz canvas:active { cursor: grabbing; }
+  .viz .label { position: absolute; z-index: 3; pointer-events: none; font-size: 10px; }
+  .viz__label { position: absolute; top: 10px; left: 12px; right: 12px; z-index: 3; display: flex; justify-content: space-between; gap: 10px; pointer-events: none; }
+  .viz__label .label { position: static; }
+  .viz__rot { left: 12px; bottom: 10px; color: var(--fg); font-variant-numeric: tabular-nums; }
+  .viz__src { right: 12px; bottom: 10px; }
+  .viz__status { top: 50%; left: 0; right: 0; text-align: center; transform: translateY(-50%); }
+  .viz.is-ready .viz__status { display: none; }
+  .viz.is-error .viz__status { color: var(--hazard); }
+  .viz.is-error .viz__status::after { content: " // offline"; }
+
   /* shared panel */
   .panel {
     position: relative;
@@ -443,6 +488,8 @@
   @media (max-width: 760px) {
     .slide__inner { justify-content: flex-start; }
     .focus, .tl, .path, .partner { grid-template-columns: 1fr; }
+    .slide__hero { grid-template-columns: 1fr; }
+    .viz { height: 240px; }
     .tl::before { left: 7px; right: auto; top: 0; bottom: 0; width: 2px; height: auto; background: var(--hazard); }
     .tl__step { padding-left: 28px; }
     .tl__node { position: absolute; left: 0; top: 4px; }
@@ -499,8 +546,19 @@
     <section class="slide" aria-roledescription="slide" aria-label="1 of 4: What XUX focuses on">
       <div class="slide__bar"><span>01 / XUX at first sight</span></div>
       <div class="slide__inner">
-        <h2 class="anim">Usable <em>where humans barely can.</em></h2>
-        <p class="slide__lead anim">XUX makes complex products understandable, usable and safe for the people who operate them, in space and other extreme environments. Three focus areas:</p>
+        <div class="slide__hero anim">
+          <div class="slide__text">
+            <h2>Usable <em>where humans barely can.</em></h2>
+            <p class="slide__lead">XUX makes complex products understandable, usable and safe for the people who operate them, in space and other extreme environments. Three focus areas:</p>
+          </div>
+          <figure class="viz" data-model="assets/models/iss.glb" data-start="0.6" data-tilt="0.35">
+            <i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>
+            <figcaption class="viz__label"><span class="label label--hz">OBJ-01 // International Space Station</span><span class="label">LEO · ~400 km</span></figcaption>
+            <span class="label viz__rot" data-rot>ROT 000°</span>
+            <span class="label viz__src">3D: NASA 3D Resources</span>
+            <span class="label viz__status" aria-hidden="true">Loading model…</span>
+          </figure>
+        </div>
         <div class="focus anim">
           <div class="panel">
             <i class="corner tl"></i><i class="corner br"></i>
@@ -534,8 +592,19 @@
     <section class="slide" aria-roledescription="slide" aria-label="2 of 4: Timeline to launch">
       <div class="slide__bar"><span>02 / Timeline to launch</span></div>
       <div class="slide__inner">
-        <h2 class="anim">Contracts first. <em>Clients from day one.</em></h2>
-        <p class="slide__lead anim">Experience and design contracts are secured before the company is founded, so work with partners starts on launch day, not months after.</p>
+        <div class="slide__hero anim">
+          <div class="slide__text">
+            <h2>Contracts first. <em>Clients from day one.</em></h2>
+            <p class="slide__lead">Experience and design contracts are secured before the company is founded, so work with partners starts on launch day, not months after.</p>
+          </div>
+          <figure class="viz" data-model="assets/models/tdrs.glb" data-start="0.9" data-tilt="0.3" data-zoom="1.45">
+            <i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>
+            <figcaption class="viz__label"><span class="label label--hz">OBJ-02 // TDRS relay satellite</span><span class="label">GEO · 35,786 km</span></figcaption>
+            <span class="label viz__rot" data-rot>ROT 000°</span>
+            <span class="label viz__src">3D: NASA 3D Resources</span>
+            <span class="label viz__status" aria-hidden="true">Loading model…</span>
+          </figure>
+        </div>
         <div class="tl anim">
           <div class="tl__step tl__step--now">
             <span class="tl__node"></span>
@@ -581,8 +650,19 @@
     <section class="slide" aria-roledescription="slide" aria-label="3 of 4: How we work with partners">
       <div class="slide__bar"><span>03 / How we work with partners</span></div>
       <div class="slide__inner">
-        <h2 class="anim">From first impression <em>to product experience.</em></h2>
-        <p class="slide__lead anim">Every partnership starts at the surface and works inward, so each step builds trust and evidence for the next.</p>
+        <div class="slide__hero anim">
+          <div class="slide__text">
+            <h2>From first impression <em>to product experience.</em></h2>
+            <p class="slide__lead">Every partnership starts at the surface and works inward, so each step builds trust and evidence for the next.</p>
+          </div>
+          <figure class="viz" data-model="assets/models/eva-suit.glb" data-start="0.4" data-tilt="0.08">
+            <i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>
+            <figcaption class="viz__label"><span class="label label--hz">OBJ-03 // EVA suit</span><span class="label">Suit pressure · 4.3 psi</span></figcaption>
+            <span class="label viz__rot" data-rot>ROT 000°</span>
+            <span class="label viz__src">3D: NASA 3D Resources</span>
+            <span class="label viz__status" aria-hidden="true">Loading model…</span>
+          </figure>
+        </div>
         <div class="path anim">
           <div class="panel">
             <span class="path__step">01</span>
@@ -621,7 +701,18 @@
     <section class="slide" aria-roledescription="slide" aria-label="4 of 4: Become a day-one partner">
       <div class="slide__bar"><span>04 / Next step</span></div>
       <div class="slide__inner">
-        <h2 class="anim">Be a <em>day-one partner.</em></h2>
+        <div class="slide__hero anim">
+          <div class="slide__text">
+            <h2>Be a <em>day-one partner.</em></h2>
+          </div>
+          <figure class="viz" data-model="assets/models/helmet.glb" data-start="0.8" data-tilt="0.12">
+            <i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>
+            <figcaption class="viz__label"><span class="label label--hz">OBJ-04 // EVA helmet</span><span class="label">Operator view</span></figcaption>
+            <span class="label viz__rot" data-rot>ROT 000°</span>
+            <span class="label viz__src">3D: NASA 3D Resources</span>
+            <span class="label viz__status" aria-hidden="true">Loading model…</span>
+          </figure>
+        </div>
         <div class="partner anim">
           <div class="panel">
             <span class="label label--hz">Who we're looking for</span>
@@ -666,6 +757,9 @@
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js"></script>
 <script src="assets/vcard.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/DRACOLoader.js"></script>
 <script>
   /* theme toggle — same storage key as index.html and the portfolio */
   (function () {
@@ -718,6 +812,7 @@
       next.disabled = i === n - 1;
       count.textContent = pad(i) + " / " + pad(n - 1);
       history.replaceState(null, "", "#" + (i + 1));
+      document.dispatchEvent(new CustomEvent("deck:change", { detail: { index: i } }));
     }
 
     prev.addEventListener("click", function () { go(cur - 1); });
@@ -757,5 +852,6 @@
     });
   })();
 </script>
+<script src="assets/viz.js"></script>
 </body>
 </html>
